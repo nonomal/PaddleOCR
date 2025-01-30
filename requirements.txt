@@ -1,10 +1,9 @@
 shapely
 scikit-image
-imgaug
 pyclipper
 lmdb
 tqdm
-numpy<2.0
+numpy
 rapidfuzz
 opencv-python
 opencv-contrib-python
@@ -15,3 +14,4 @@ requests
 albumentations==1.4.10
 # to be compatible with albumentations
 albucore==0.0.13
+packaging

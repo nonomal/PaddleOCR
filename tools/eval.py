@@ -107,7 +107,16 @@ def main():
             model_type = "can"
         elif config["Architecture"]["algorithm"] == "LaTeXOCR":
             model_type = "latexocr"
-            config["Metric"]["cal_blue_score"] = True
+            config["Metric"]["cal_bleu_score"] = True
+        elif config["Architecture"]["algorithm"] == "UniMERNet":
+            model_type = "unimernet"
+            config["Metric"]["cal_bleu_score"] = True
+        elif config["Architecture"]["algorithm"] in [
+            "PP-FormulaNet-S",
+            "PP-FormulaNet-L",
+        ]:
+            model_type = "pp_formulanet"
+            config["Metric"]["cal_bleu_score"] = True
         else:
             model_type = config["Architecture"]["model_type"]
     else:
@@ -122,7 +131,6 @@ def main():
     if use_amp:
         AMP_RELATED_FLAGS_SETTING = {
             "FLAGS_cudnn_batchnorm_spatial_persistent": 1,
-            "FLAGS_max_inplace_grad_add": 8,
         }
         paddle.set_flags(AMP_RELATED_FLAGS_SETTING)
         scale_loss = config["Global"].get("scale_loss", 1.0)

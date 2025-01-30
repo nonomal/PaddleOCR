@@ -172,18 +172,16 @@ def main(config, device, logger, vdl_writer, seed):
     amp_custom_black_list = config["Global"].get("amp_custom_black_list", [])
     amp_custom_white_list = config["Global"].get("amp_custom_white_list", [])
     if os.path.exists(
-        os.path.join(config["Global"]["save_model_dir"], "train_results.json")
+        os.path.join(config["Global"]["save_model_dir"], "train_result.json")
     ):
         try:
             os.remove(
-                os.path.join(config["Global"]["save_model_dir"], "train_results.json")
+                os.path.join(config["Global"]["save_model_dir"], "train_result.json")
             )
         except:
             pass
     if use_amp:
-        AMP_RELATED_FLAGS_SETTING = {
-            "FLAGS_max_inplace_grad_add": 8,
-        }
+        AMP_RELATED_FLAGS_SETTING = {}
         if paddle.is_compiled_with_cuda():
             AMP_RELATED_FLAGS_SETTING.update(
                 {
@@ -217,7 +215,10 @@ def main(config, device, logger, vdl_writer, seed):
     )
 
     if config["Global"]["distributed"]:
-        model = paddle.DataParallel(model)
+        find_unused_parameters = config["Global"].get("find_unused_parameters", False)
+        model = paddle.DataParallel(
+            model, find_unused_parameters=find_unused_parameters
+        )
     # start train
     program.train(
         config,
